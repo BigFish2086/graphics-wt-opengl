@@ -1,0 +1,35 @@
+
+# build directories
+cmake-build-*/
+build/
+out/
+bin/
+
+# imgui saved state
+imgui.ini
+
+# Since ".obj" are ignored by default, we force them to be added
+!assets/models/**/*.obj
+
+# Visual Studio specific files
+CMakeSettings.json
+.vs/
+
+# Clion specific files
+.idea/
+
+# Visual Studio Code specific files
+.vscode/
+
+# Screenshots
+screenshots/
+
+# clangd configurations
+compile_commands.json
+.clangd
+test.log
+
+# scripts to cofigure and build this cmake project
+configure.sh
+build.sh
+run.sh
