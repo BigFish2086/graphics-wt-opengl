@@ -26,6 +26,7 @@ screenshots/
 
 # clangd configurations
 compile_commands.json
+.clang-format
 .clangd
 test.log
 
