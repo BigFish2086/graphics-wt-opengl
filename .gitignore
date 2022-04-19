@@ -28,9 +28,12 @@ screenshots/
 compile_commands.json
 .clang-format
 .clangd
+.cache
 test.log
 
 # scripts to cofigure and build this cmake project
 configure.sh
 build.sh
 run.sh
+
+names.txt

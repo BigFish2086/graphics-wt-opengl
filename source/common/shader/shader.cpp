@@ -71,6 +71,7 @@ bool our::ShaderProgram::attach(const std::string &filename,
 
     // TODO: attach the shader to the program then delete the shader
     glAttachShader(this->program, shaderID);
+    glDeleteShader(shaderID);
 
     // We return true since the compilation succeeded
     return true;
