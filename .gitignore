@@ -24,6 +24,9 @@ CMakeSettings.json
 # Screenshots
 screenshots/
 
+# Scripts Build e.g. imgcmp
+scripts/imgcmp_bin/
+
 # clangd configurations
 compile_commands.json
 .clang-format
