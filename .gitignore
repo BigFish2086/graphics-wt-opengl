@@ -26,6 +26,7 @@ screenshots/
 
 # Scripts Build e.g. imgcmp
 scripts/imgcmp_bin/
+imgcmp
 
 # clangd configurations
 compile_commands.json
