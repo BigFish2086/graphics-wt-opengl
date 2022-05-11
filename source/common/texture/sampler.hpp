@@ -21,6 +21,7 @@ public:
     // This deconstructor deletes the underlying OpenGL sampler
     ~Sampler() {
         // TODO: (Req 5) Complete this function
+        glDeleteSamplers(1, &name);
     }
 
     // This method binds this sampler to the given texture unit

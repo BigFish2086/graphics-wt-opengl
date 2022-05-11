@@ -42,21 +42,25 @@ struct PipelineState {
     // For example, if faceCulling.enabled is true, you should call glEnable(GL_CULL_FACE), otherwise, you should call
     // glDisable(GL_CULL_FACE)
     void setup() const {
+        glDepthMask(depthMask);
+        glColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
+
         // TODO: (Req 3) Write this function
         // faceCulling option
         if (faceCulling.enabled == true) {
             glEnable(GL_CULL_FACE);
+            glCullFace(faceCulling.culledFace); // specifies which face to be culled
+            glFrontFace(faceCulling.frontFace);
         } else {
             glDisable(GL_CULL_FACE);
         }
-        glCullFace(faceCulling.culledFace); // specifies which face to be culled
         // specifies the direction for the front face i.e. clockwise or counter-clockwise
         // to distinguish which face is considered to be the front face, so the culling is done properly
-        glFrontFace(faceCulling.frontFace);
 
         // depthTesting option
         if (depthTesting.enabled == true) {
             glEnable(GL_DEPTH_TEST);
+            glDepthFunc(depthTesting.function);
         } else {
             glDisable(GL_DEPTH_TEST);
         }
@@ -73,11 +77,14 @@ struct PipelineState {
         // - GL_ALWAYS = Always passes.
         // The initial value of func is GL_LESS. Initially, depth testing is disabled. If depth testing is disabled or
         // if no depth buffer exists, it is as if the depth test always passes.
-        glDepthFunc(depthTesting.function);
 
         // blending option
         if (blending.enabled) {
             glEnable(GL_BLEND);
+            glBlendEquation(blending.equation);
+            glBlendFunc(blending.sourceFactor, blending.destinationFactor);
+            glBlendColor(blending.constantColor.r, blending.constantColor.g, blending.constantColor.b,
+                         blending.constantColor.a);
         } else {
             glDisable(GL_BLEND);
         }
@@ -88,7 +95,6 @@ struct PipelineState {
         // - GL_FUNC_REVERSE_SUBTRACT: the operation is "-" but the operands are reversed.
         // - GL_MIN: the operation picks the minimum value among the 2 operands.
         // - GL_MAX: the operation picks the maximum value among the 2 operands.
-        glBlendEquation(blending.equation);
 
         // sfactor
         // - Specifies how the red, green, blue, and alpha source blending factors are computed.
@@ -96,12 +102,9 @@ struct PipelineState {
         // dfactor
         // - Specifies how the red, green, blue, and alpha destination blending factors are computed.
         //   The initial value is GL_ZERO.
-        glBlendFunc(blending.sourceFactor, blending.destinationFactor);
 
         // In case you're using any of the factors that use the constant color, you need to define it via the
         // glBlendColor function.
-        glBlendColor(blending.constantColor.r, blending.constantColor.g, blending.constantColor.b,
-                     blending.constantColor.a);
     }
 
     // Given a json object, this function deserializes a PipelineState structure
