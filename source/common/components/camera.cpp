@@ -62,8 +62,8 @@ glm::mat4 CameraComponent::getProjectionMatrix(glm::ivec2 viewportSize) const {
         //  NOTE: The function glm::ortho can be used to create the orthographic projection matrix
         //  It takes left, right, bottom, top. Bottom is -orthoHeight/2 and Top is orthoHeight/2.
         //  Left and Right are the same but after being multiplied by the aspect ratio
-        float left = orthoHeight / 2;
-        float right = -orthoHeight / 2;
+        float left = -orthoHeight / 2;
+        float right = orthoHeight / 2;
         float bottom = -orthoHeight / 2;
         float top = orthoHeight;
         return glm::ortho(left * aspectRatio, right * aspectRatio, bottom, top);

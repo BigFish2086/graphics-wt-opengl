@@ -14,8 +14,9 @@ void Material::setup() const {
 
 // This function read the material data from a json object
 void Material::deserialize(const nlohmann::json &data) {
-    if (!data.is_object())
+    if (!data.is_object()) {
         return;
+    }
 
     if (data.contains("pipelineState")) {
         pipelineState.deserialize(data["pipelineState"]);
