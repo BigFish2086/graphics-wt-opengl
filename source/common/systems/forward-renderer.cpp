@@ -154,7 +154,11 @@ void ForwardRenderer::render(World *world) {
                   //  HINT: the following return should return true "first" should be drawn before "second".
                   //  The code is just an example, you should change it to return true if "first" should be drawn
                   //  before "second"
-                  return glm::distance(cameraForward, first.center) < glm::distance(cameraForward, second.center);
+                  const auto d1 = pow(first.center.x - cameraForward.x, 2) + pow(first.center.y - cameraForward.y, 2) +
+                                  pow(first.center.z - cameraForward.z, 2);
+                  const auto d2 = pow(second.center.x - cameraForward.x, 2) +
+                                  pow(second.center.y - cameraForward.y, 2) + pow(second.center.z - cameraForward.z, 2);
+                  return d1 > d2;
               });
 
     // TODO: (Req 8) Get the camera ViewProjection matrix and store it in VP
@@ -194,12 +198,10 @@ void ForwardRenderer::render(World *world) {
         this->skyMaterial->setup();
 
         // TODO: (Req 9) Get the camera position
-        glm::vec3 cameraPosition = camera->getOwner()->getLocalToWorldMatrix()[3];
         glm::vec4 cameraPosition = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1);
 
         // TODO: (Req 9) Create a model matrix for the sy such that it always
         // follows the camera (sky sphere center = camera position)
-        glm::mat4 skyModelMatrix = glm::translate(glm::mat4(1.0f), cameraPosition);
         glm::mat4 skyModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cameraPosition));
 
         // TODO: (Req 9) We want the sky to be drawn behind everything (in NDC space, z=1)
