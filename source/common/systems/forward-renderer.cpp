@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include "glad/gl.h"
 
 namespace our {
 
@@ -57,13 +58,32 @@ void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &co
     // Then we check if there is a postprocessing shader in the configuration
     if (config.contains("postprocess")) {
         // TODO: (Req 10) Create a framebuffer
+        glGenFramebuffers(1, &this->postProcessFrameBuffer);
 
         // TODO: (Req 10) Create a color and a depth texture and attach them to the framebuffer
         //  Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
         //  The depth format can be (Depth component with 24 bits).
+        colorTarget = new Texture2D();
+        depthTarget = new Texture2D();
+
+        // parameters of glFramebufferTexture2D are: target, attachment, textarget, texture, level
+        // 1. target: Specifies the framebuffer target.
+        // target must be GL_DRAW_FRAMEBUFFER, GL_READ_FRAMEBUFFER, or GL_FRAMEBUFFER.
+        // GL_FRAMEBUFFER is equivalent to GL_DRAW_FRAMEBUFFER.
+        // 2. attachment: Specifies the attachment point of the framebuffer.
+        // 3. attachment: must be GL_COLOR_ATTACHMENTi, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT or
+        // GL_DEPTH_STENCIL_ATTACHMENT.
+        // 4. textarget: Specifies a 2D texture target, or for cube map textures, which face is to be attached.
+        // 5. texture: Specifies the texture object to attach to the framebuffer attachment point named by attachment.
+        // 6. level: Specifies the mipmap level of texture to attach.
+
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(),
+                               0);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(),
+                               0);
 
         // TODO: (Req 10) Unbind the framebuffer just to be safe
-        // this->postprocessFramebuffer->unbind();
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
         // Create a vertex array to use for drawing the texture
         glGenVertexArrays(1, &postProcessVertexArray);
@@ -179,6 +199,7 @@ void ForwardRenderer::render(World *world) {
     // If there is a postprocess material, bind the framebuffer
     if (postProcessMaterial) {
         // TODO: (Req 10) bind the framebuffer
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->postProcessFrameBuffer);
     }
 
     // TODO: (Req 8) Clear the color and depth buffers
@@ -231,8 +252,10 @@ void ForwardRenderer::render(World *world) {
     // If there is a postprocess material, apply postprocessing
     if (postProcessMaterial) {
         // TODO: (Req 10) Return to the default framebuffer
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
         // TODO: (Req 10) Setup the postprocess material and draw the fullscreen triangle
+        this->postProcessMaterial->setup();
     }
 }
 

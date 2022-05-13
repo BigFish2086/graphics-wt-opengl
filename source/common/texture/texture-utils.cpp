@@ -8,7 +8,10 @@
 our::Texture2D *our::texture_utils::empty(GLenum format, glm::ivec2 size) {
     our::Texture2D *texture = new our::Texture2D();
     // TODO: (Req 10) Finish this function to create an empty texture with the given size and format
-
+    texture->bind();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // target, level, internal-format, width, height, border=0, format, type, data
+    glTexImage2D(GL_TEXTURE_2D, 0, format, size.x, size.y, 0, format, GL_UNSIGNED_BYTE, nullptr);
     return texture;
 }
 
@@ -37,7 +40,16 @@ our::Texture2D *our::texture_utils::loadImage(const std::string &filename, bool 
     // TODO: (Req 4) Finish this function to fill the texture with the data
     // found in "pixels" and generate the mipmaps if requested
     texture->bind();
+
+    // set pixel storage modes
+    //  GL_UNPACK_ALIGNMENT: Specifies the alignment requirements for the start of each pixel row in memory. The
+    //  allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8
+    //  (rows start on double-word boundaries).
+    //  GL_UNPACK_ALIGNMENT: Specifies the alignment requirements for the start of each pixel row in memory. The
+    //  allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8
+    //  (rows start on double-word boundaries).
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
     // target, level, internal-format, width, height, border=0, format, type, data
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     if (generate_mipmap == true) {
