@@ -195,10 +195,12 @@ void ForwardRenderer::render(World *world) {
 
         // TODO: (Req 9) Get the camera position
         glm::vec3 cameraPosition = camera->getOwner()->getLocalToWorldMatrix()[3];
+        glm::vec4 cameraPosition = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1);
 
         // TODO: (Req 9) Create a model matrix for the sy such that it always
         // follows the camera (sky sphere center = camera position)
         glm::mat4 skyModelMatrix = glm::translate(glm::mat4(1.0f), cameraPosition);
+        glm::mat4 skyModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(cameraPosition));
 
         // TODO: (Req 9) We want the sky to be drawn behind everything (in NDC space, z=1)
         //  We can acheive the is by multiplying by an extra matrix
