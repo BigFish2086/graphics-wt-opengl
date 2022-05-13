@@ -23,6 +23,13 @@ void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &co
         //  Hints: the sky will be draw after the opaque objects so we would need
         // depth testing but which depth funtion should we pick? We will draw the sphere
         // from the inside, so what options should we pick for the face culling.
+        PipelineState skyPipelineState{};
+        skyPipelineState.depthTesting.enabled = true;
+        skyPipelineState.depthTesting.function = GL_LEQUAL;
+        skyPipelineState.faceCulling.enabled = true;
+        skyPipelineState.faceCulling.culledFace = GL_FRONT;
+        skyPipelineState.faceCulling.frontFace = GL_CCW;
+        skyPipelineState.setup();
 
         // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while
         // rendering the sky)
@@ -184,11 +191,14 @@ void ForwardRenderer::render(World *world) {
     // If there is a sky material, draw the sky
     if (this->skyMaterial) {
         // TODO: (Req 9) setup the sky material
+        this->skyMaterial->setup();
 
         // TODO: (Req 9) Get the camera position
+        glm::vec3 cameraPosition = camera->getOwner()->getLocalToWorldMatrix()[3];
 
         // TODO: (Req 9) Create a model matrix for the sy such that it always
         // follows the camera (sky sphere center = camera position)
+        glm::mat4 skyModelMatrix = glm::translate(glm::mat4(1.0f), cameraPosition);
 
         // TODO: (Req 9) We want the sky to be drawn behind everything (in NDC space, z=1)
         //  We can acheive the is by multiplying by an extra matrix
@@ -201,8 +211,10 @@ void ForwardRenderer::render(World *world) {
             0.0f, 0.0f, 1.0f, 1.0f  // Column4
         );
         // TODO: (Req 9) set the "transform" uniform
+        this->skyMaterial->shader->set("transform", VP * skyModelMatrix * alwaysBehindTransform);
 
         // TODO: (Req 9) draw the sky sphere
+        this->skySphere->draw();
     }
     // TODO: (Req 8) Draw all the transparent commands
     //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
