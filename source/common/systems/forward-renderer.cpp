@@ -59,12 +59,13 @@ void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &co
     if (config.contains("postprocess")) {
         // TODO: (Req 10) Create a framebuffer
         glGenFramebuffers(1, &this->postProcessFrameBuffer);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->postProcessFrameBuffer);
 
         // TODO: (Req 10) Create a color and a depth texture and attach them to the framebuffer
         //  Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
         //  The depth format can be (Depth component with 24 bits).
-        colorTarget = new Texture2D();
-        depthTarget = new Texture2D();
+        colorTarget = texture_utils::empty(GL_RGBA8, windowSize);
+        depthTarget = texture_utils::empty(GL_DEPTH_COMPONENT24, windowSize);
 
         // parameters of glFramebufferTexture2D are: target, attachment, textarget, texture, level
         // 1. target: Specifies the framebuffer target.
@@ -256,6 +257,8 @@ void ForwardRenderer::render(World *world) {
 
         // TODO: (Req 10) Setup the postprocess material and draw the fullscreen triangle
         this->postProcessMaterial->setup();
+        glBindVertexArray(this->postProcessVertexArray);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 }
 

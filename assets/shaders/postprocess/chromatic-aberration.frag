@@ -21,8 +21,14 @@ void main(){
     // To get the red channel, we move by amount STRENGTH to the left then sample another pixel from which we take the red channel
     // To get the blue channel, we move by amount STRENGTH to the right then sample another pixel from which we take the blue channel
     // The red/green/blue channels are then added together to create the final pixel
-    vec4 green = texture(tex, tex_coord);
-    vec4 red_left = texture(tex, tex_coord + vec2(-STRENGTH, 0.0));
-    vec4 blue_right = texture(tex, tex_coord + vec2(STRENGTH, 0.0));
-    frag_color = red_left + green + blue_right;
+
+    vec4 pixel = texture(tex, tex_coord);
+
+    vec2 red_left = vec2(tex_coord.x-STRENGTH, tex_coord.y);
+    vec4 red_pixel = texture(tex, red_left);
+
+    vec2 blue_right = vec2(tex_coord.x+STRENGTH, tex_coord.y);
+    vec4 blue_pixel = texture(tex, blue_right);
+
+    frag_color = vec4(red_pixel.x, pixel.y, blue_pixel.z, pixel.w);
 }

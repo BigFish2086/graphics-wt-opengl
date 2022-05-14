@@ -15,10 +15,12 @@ void main(){
     //TODO: Modify this shader to apply vignette
     // To apply vignette, divide the scene color
     // by 1 + the squared length of the 2D pixel location the NDC space
+
     // Hint: remember that the NDC space ranges from -1 to 1
     // while the texture coordinate space ranges from 0 to 1
     // We have the pixel's texture coordinate, how can we compute its location in the NDC space?
-    vec3 color = texture(tex, tex_coord).rgb;
-    float dist = (length(tex_coord) * length(tex_coord)) + 1.0;
-    frag_color = vec4(color / dist, 1);
+
+    vec2 uv = tex_coord * 2.0 - 1.0;
+    float d = length(uv);
+    frag_color = texture(tex, tex_coord)/(1.0 + d*d);
 }
