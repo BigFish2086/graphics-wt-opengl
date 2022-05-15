@@ -162,8 +162,9 @@ void ForwardRenderer::render(World *world) {
     }
 
     // If there is no camera, we return (we cannot render without a camera)
-    if (camera == nullptr)
+    if (camera == nullptr) {
         return;
+    }
 
     // TODO: (Req 8) Modify the following line such that "cameraForward"
     // contains a vector pointing the camera forward direction
@@ -237,7 +238,7 @@ void ForwardRenderer::render(World *world) {
             0.0f, 0.0f, 1.0f, 1.0f  // Column4
         );
         // TODO: (Req 9) set the "transform" uniform
-        this->skyMaterial->shader->set("transform", VP * skyModelMatrix * alwaysBehindTransform);
+        this->skyMaterial->shader->set("transform", alwaysBehindTransform * VP * skyModelMatrix);
 
         // TODO: (Req 9) draw the sky sphere
         this->skySphere->draw();
