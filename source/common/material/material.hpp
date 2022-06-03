@@ -64,4 +64,15 @@ inline Material *createMaterialFromType(const std::string &type) {
     }
 }
 
+class LitMaterial : public TintedMaterial
+{
+public:
+    Texture2D *texture;
+    Sampler *sampler;
+    float alphaThreshold;
+
+    void setup() const override;
+    void deserialize(const nlohmann::json &data) override;
+};
+
 } // namespace our
