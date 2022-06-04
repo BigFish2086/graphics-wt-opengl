@@ -39,6 +39,9 @@ class ForwardRenderer {
     // Objects used for rendering a skybox
     Mesh *skySphere;
     TexturedMaterial *skyMaterial;
+    glm::vec3 sky_top;
+    glm::vec3 sky_middle;
+    glm::vec3 sky_bottom;
 
     // Objects used for Postprocessing
     GLuint postProcessFrameBuffer, postProcessVertexArray;

@@ -14,6 +14,18 @@ void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &co
         this->initSky(config);
     }
 
+    // check for sky_top, sky_middle, sky_bottom
+    if (config.contains("sky_top")) {
+        std::vector<float> v = config["sky_top"];
+        sky_top = glm::vec3(v[0], v[1], v[2]);
+    }
+    if (config.contains("sky_middle")) {
+        std::vector<float> v = config["sky_middle"];
+        sky_middle = glm::vec3(v[0], v[1], v[2]);
+    }
+    if (config.contains("sky_bottom")) {
+        std::vector<float> v = config["sky_bottom"];
+        sky_bottom = glm::vec3(v[0], v[1], v[2]);
     }
 
     // Then we check if there is a postprocessing shader in the configuration
@@ -135,6 +147,10 @@ void ForwardRenderer::render(World *world) {
             program->set("M_IT", M_IT);
             program->set("VP", VP);
             this->renderLights(lEntities, program);
+
+            program->set("sky.top", this->sky_top);
+            program->set("sky.middle", this->sky_middle);
+            program->set("sky.bottom", this->sky_bottom);
             mesh->draw();
         }
     };
