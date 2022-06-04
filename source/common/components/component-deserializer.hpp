@@ -3,6 +3,7 @@
 #include "../ecs/entity.hpp"
 #include "camera.hpp"
 #include "car.hpp"
+#include "collision.hpp"
 #include "free-camera-controller.hpp"
 #include "light.hpp"
 #include "mesh-renderer.hpp"
@@ -16,6 +17,7 @@ namespace our {
 inline void deserializeComponent(const nlohmann::json &data, Entity *entity) {
     std::string type = data.value("type", "");
     Component *component = nullptr;
+
     if (type == CameraComponent::getID()) {
         component = entity->addComponent<CameraComponent>();
     } else if (type == MeshRendererComponent::getID()) {
@@ -30,7 +32,10 @@ inline void deserializeComponent(const nlohmann::json &data, Entity *entity) {
         component = entity->addComponent<PlayerComponent>();
     } else if (type == CarComponent::getID()) {
         component = entity->addComponent<CarComponent>();
+    } else if (type == CollisionComponent::getID()) {
+        component = entity->addComponent<CollisionComponent>();
     }
+
     if (component)
         component->deserialize(data);
 }

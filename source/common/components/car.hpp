@@ -11,7 +11,7 @@ namespace our {
 class CarComponent : public Component {
 public:
     // car velocity, mesh, material
-    glm::vec3 velocity;
+    glm::vec3 velocity = glm::vec3(5.0f);
     Mesh *mesh;
     Material *material;
 
