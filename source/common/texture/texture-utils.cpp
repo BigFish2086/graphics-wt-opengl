@@ -8,7 +8,7 @@
 our::Texture2D *our::texture_utils::empty(GLenum format, glm::ivec2 size) {
     our::Texture2D *texture = new our::Texture2D();
     // TODO: (Req 10) Finish this function to create an empty texture with the given size and format
-    texture->bind();
+    texture->bind(GL_TEXTURE0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // simultaneously specify storage for all levels of a two-dimensional or one-dimensional array texture
