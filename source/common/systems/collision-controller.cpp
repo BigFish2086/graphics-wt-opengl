@@ -15,13 +15,13 @@
 
 namespace our {
 
-class CarController {
+class CollisionController {
     Application *app;
 
 public:
     void enter(Application *app) { this->app = app; }
 
-    void update(World *world, float deltaTime) {
+    void update(World *world, bool &collision) {
 
         // get a player component
         PlayerComponent *player = nullptr;
@@ -66,19 +66,22 @@ public:
                         } else {
                             playerScale.x += player->health * 0.1f;
                         }
+                        carPosition.z += 10;
                     } else if (otherCollision->obstacleType == "barrier") {
                         player->health -= effect;
                         if (player->health <= 0) {
                             player->health = 0;
                             playerScale.x = 0.0f;
                             // TODO: game over
+                            collision = true;
                         } else {
                             playerScale.x -= effect * 0.1f;
                         }
                     }
-                    carPosition.x += 10;
-                    break;
+                    carPosition.z -= 20;
+                    carPosition.y -= 20;
                 }
+                break;
             }
         }
     }

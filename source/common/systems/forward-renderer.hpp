@@ -59,6 +59,9 @@ private:
     std::vector<Entity *> lightEntities(World *world);
     void renderLights(const std::vector<Entity *> &entities, ShaderProgram *program);
 
+    // car entities with mesh renderer component
+    std::vector<Entity *> carEntities(World *world);
+
 public:
     // Initialize the renderer including the sky and the Postprocessing objects.
     // windowSize is the width & height of the window (in pixels).

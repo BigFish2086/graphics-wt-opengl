@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include "components/car.hpp"
 #include "glad/gl.h"
 #include "glm/gtx/euler_angles.hpp"
 
@@ -62,10 +63,25 @@ void ForwardRenderer::render(World *world) {
     transparentCommands.clear();
     for (auto entity : world->getEntities()) {
         // If we hadn't found a camera yet, we look for a camera in this entity
-        if (!camera)
+        if (!camera) {
             camera = entity->getComponent<CameraComponent>();
+        }
         // If this entity has a mesh renderer component
         if (auto meshRenderer = entity->getComponent<MeshRendererComponent>(); meshRenderer) {
+            // We construct a command from it
+            RenderCommand command;
+            command.localToWorld = meshRenderer->getOwner()->getLocalToWorldMatrix();
+            command.center = glm::vec3(command.localToWorld * glm::vec4(0, 0, 0, 1));
+            command.mesh = meshRenderer->mesh;
+            command.material = meshRenderer->material;
+            // if it is transparent, we add it to the transparent commands list
+            if (command.material->transparent) {
+                transparentCommands.push_back(command);
+            } else {
+                // Otherwise, we add it to the opaque command list
+                opaqueCommands.push_back(command);
+            }
+        } else if (auto meshRenderer = entity->getComponent<CarComponent>(); meshRenderer) {
             // We construct a command from it
             RenderCommand command;
             command.localToWorld = meshRenderer->getOwner()->getLocalToWorldMatrix();
@@ -129,8 +145,12 @@ void ForwardRenderer::render(World *world) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // grap all the entities having light components
-    std::vector<Entity *> lEntities = this->lightEntities(world);
-    auto executeCommands = [&VP, &camera, &lEntities, this](std::vector<RenderCommand> commands) {
+    std::vector<Entity *> lents = this->lightEntities(world);
+
+    // grap all the car entities
+    std::vector<Entity *> cents = this->carEntities(world);
+
+    auto executeCommands = [&VP, &camera, this](std::vector<RenderCommand> commands, std::vector<Entity *> entities) {
         for (RenderCommand command : commands) {
             ShaderProgram *program = command.material->shader;
             Mesh *mesh = command.mesh;
@@ -146,7 +166,7 @@ void ForwardRenderer::render(World *world) {
             program->set("M", M);
             program->set("M_IT", M_IT);
             program->set("VP", VP);
-            this->renderLights(lEntities, program);
+            this->renderLights(entities, program); // will only work with light entities
 
             program->set("sky.top", this->sky_top);
             program->set("sky.middle", this->sky_middle);
@@ -157,7 +177,8 @@ void ForwardRenderer::render(World *world) {
 
     // TODO: (Req 8) Draw all the opaque commands
     //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-    executeCommands(opaqueCommands);
+    executeCommands(opaqueCommands, lents);
+    executeCommands(opaqueCommands, cents);
 
     // If there is a sky material, draw the sky
     if (this->skyMaterial) {
@@ -189,7 +210,8 @@ void ForwardRenderer::render(World *world) {
     }
     // TODO: (Req 8) Draw all the transparent commands
     //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-    executeCommands(transparentCommands);
+    executeCommands(transparentCommands, cents);
+    executeCommands(transparentCommands, lents);
 
     // If there is a postprocess material, apply postprocessing
     if (postProcessMaterial) {
@@ -336,6 +358,17 @@ void ForwardRenderer::renderLights(const std::vector<Entity *> &entities, Shader
                 (glm::vec3)((glm::yawPitchRoll(rotation[1], rotation[0], rotation[2]) * (glm::vec4(0, -1, 0, 0)))));
         }
     }
+}
+
+std::vector<Entity *> ForwardRenderer::carEntities(World *world) {
+    std::vector<Entity *> entities;
+    for (auto entity : world->getEntities()) {
+        auto lent = entity->getComponent<CarComponent>();
+        if (lent) {
+            entities.push_back(entity);
+        }
+    }
+    return entities;
 }
 
 } // namespace our
