@@ -160,7 +160,7 @@ void ForwardRenderer::render(World *world) {
             glm::vec3 eye =
                 glm::vec3(camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(glm::vec3(0, 0, 0), 1.0f));
             glm::mat4 M = command.localToWorld;
-            glm::mat4 M_IT = glm::inverse(glm::transpose(M));
+            glm::mat4 M_IT = glm::transpose(glm::inverse(M));
 
             program->set("eye", eye);
             program->set("M", M);
@@ -203,7 +203,9 @@ void ForwardRenderer::render(World *world) {
             0.0f, 0.0f, 1.0f, 1.0f  // Column4
         );
         // TODO: (Req 9) set the "transform" uniform
-        this->skyMaterial->shader->set("transform", alwaysBehindTransform * VP * skyModelMatrix);
+        //this->skyMaterial->shader->set("transform", alwaysBehindTransform * VP * skyModelMatrix);
+        this->skyMaterial->shader->set("M", skyModelMatrix);
+        this->skyMaterial->shader->set("VP", alwaysBehindTransform * VP );
 
         // TODO: (Req 9) draw the sky sphere
         this->skySphere->draw();
