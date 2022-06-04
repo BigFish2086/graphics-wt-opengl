@@ -2,10 +2,12 @@
 
 #include "../ecs/entity.hpp"
 #include "camera.hpp"
+#include "car.hpp"
 #include "free-camera-controller.hpp"
 #include "light.hpp"
 #include "mesh-renderer.hpp"
 #include "movement.hpp"
+#include "player.hpp"
 
 namespace our {
 
@@ -24,6 +26,10 @@ inline void deserializeComponent(const nlohmann::json &data, Entity *entity) {
         component = entity->addComponent<MovementComponent>();
     } else if (type == LightComponent::getID()) {
         component = entity->addComponent<LightComponent>();
+    } else if (type == PlayerComponent::getID()) {
+        component = entity->addComponent<PlayerComponent>();
+    } else if (type == CarComponent::getID()) {
+        component = entity->addComponent<CarComponent>();
     }
     if (component)
         component->deserialize(data);
