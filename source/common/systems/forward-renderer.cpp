@@ -4,6 +4,7 @@
 #include "components/car.hpp"
 #include "glad/gl.h"
 #include "glm/gtx/euler_angles.hpp"
+#include <iostream>
 
 namespace our {
 
@@ -166,11 +167,17 @@ void ForwardRenderer::render(World *world) {
             program->set("M", M);
             program->set("M_IT", M_IT);
             program->set("VP", VP);
-            this->renderLights(entities, program); // will only work with light entities
+            if (entities.size() && entities[0]->getComponent<LightComponent>())
+            {
+                this->renderLights(entities, program); // will only work with light entities
+            }
 
             program->set("sky.top", this->sky_top);
             program->set("sky.middle", this->sky_middle);
             program->set("sky.bottom", this->sky_bottom);
+            // program->set("sky.top", glm::vec3(0,0,0));
+            // program->set("sky.middle", glm::vec3(0, 0, 0));
+            // program->set("sky.bottom", glm::vec3(0, 0, 0));
             mesh->draw();
         }
     };
@@ -336,15 +343,14 @@ std::vector<Entity *> ForwardRenderer::lightEntities(World *world) {
     }
     return entities;
 }
-
 void ForwardRenderer::renderLights(const std::vector<Entity *> &entities, ShaderProgram *program) {
     int cnt = entities.size();
     program->set("light_count", cnt);
-    for (int i = 0; i < cnt; i++) {
+    for (int i = 0; i < cnt; i++)
+    {
         auto entity = entities[i];
         auto lent = entity->getComponent<LightComponent>();
         if (lent) {
-            // set the light type, diffuse, specular, position, attneuation, cone_angles
             program->set("lights[" + std::to_string(i) + "].type", (int)lent->lightType);
             program->set("lights[" + std::to_string(i) + "].diffuse", lent->diffuse);
             program->set("lights[" + std::to_string(i) + "].specular", lent->specular);
@@ -355,9 +361,7 @@ void ForwardRenderer::renderLights(const std::vector<Entity *> &entities, Shader
 
             // set the light's direction
             glm::vec3 rotation = entity->localTransform.rotation;
-            program->set(
-                "lights[" + std::to_string(i) + "].direction",
-                (glm::vec3)((glm::yawPitchRoll(rotation[1], rotation[0], rotation[2]) * (glm::vec4(0, -1, 0, 0)))));
+            program->set("lights[" + std::to_string(i) + "].direction",lent->direction);
         }
     }
 }

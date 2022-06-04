@@ -28,5 +28,10 @@ namespace our
         specular = data.value("specular", glm::vec3(0.0f, 0.0f, 0.0f));
         attenuation = data.value("attenuation", glm::vec3(0.0f, 0.0f, 0.0f));
         cone_angles = data.value("cone_angles", glm::vec2(0.0f, 0.0f));
+        direction = data.value("direction",glm::vec3(0,0,0));
     }
+
+    // glm::vec3 LightComponent::getDirection() const{
+    //     return glm::vec3(0, -1, 0);
+    // }
 } // namespace our

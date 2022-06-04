@@ -17,7 +17,6 @@ namespace our
     {
     public:
         LightType lightType;
-        glm::vec3 position;
         glm::vec3 direction;
         glm::vec3 diffuse;
         glm::vec3 specular;
@@ -28,6 +27,8 @@ namespace our
 
         
         void deserialize(const nlohmann::json &data) override;
+
+        glm::vec3 getDirection() const;
 
     };
 

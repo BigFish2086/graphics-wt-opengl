@@ -68,13 +68,13 @@ void LitMaterial::setup() const {
     if (this->albedo) {
         this->albedo->bind(GL_TEXTURE0);
     }
-    this->albedo_sampler->bind(0);
+    this->sampler->bind(0);
     this->shader->set("material.albedo", 0);
 
     if (this->specular) {
         this->specular->bind(GL_TEXTURE1);
     }
-    this->specular_sampler->bind(1);
+    this->sampler->bind(1);
     this->shader->set("material.specular", 1);
 
     if (this->ambient_occlusion) {
@@ -83,20 +83,20 @@ void LitMaterial::setup() const {
     } else {
         this->shader->set("material.ambientOcclusionEnable", false);
     }
-    this->ambient_occlusion_sampler->bind(2);
+    this->sampler->bind(2);
     this->shader->set("material.ambient_occlusion", 2);
 
     if (this->roughness) {
         this->roughness->bind(GL_TEXTURE3);
     }
-    this->roughness_sampler->bind(3);
+    this->sampler->bind(3);
     this->shader->set("material.roughness", 3);
 
     if (this->emissive) {
         this->emissive->bind(GL_TEXTURE4);
     }
-    this->emissive_sampler->bind(4);
-    this->shader->set("material.roughness", 4);
+    this->sampler->bind(4);
+    this->shader->set("material.emissive", 4);
 }
 
 // This function read the material data from a json object
@@ -104,30 +104,31 @@ void LitMaterial::deserialize(const nlohmann::json &data) {
     if (!data.is_object())
         return;
     Material::deserialize(data);
+    sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    if (data.contains("albedo_texture")) {
+    //if (data.contains("albedo_texture")) {
         albedo = AssetLoader<Texture2D>::get(data.value("albedo_texture", ""));
-    }
-    albedo_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+   // }
+    //albedo_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    if (data.contains("specular_texture")) {
+    //if (data.contains("specular_texture")) {
         specular = AssetLoader<Texture2D>::get(data.value("specular_texture", ""));
-    }
-    specular_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+   // }
+    //specular_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    if (data.contains("ambientOcclusion_texture")) {
+    //if (data.contains("ambientOcclusion_texture")) {
         ambient_occlusion = AssetLoader<Texture2D>::get(data.value("ambientOcclusion_texture", ""));
-    }
-    ambient_occlusion_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    //}
+    //ambient_occlusion_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    if (data.contains("roughness_texture")) {
+    //if (data.contains("roughness_texture")) {
         roughness = AssetLoader<Texture2D>::get(data.value("roughness_texture", ""));
-    }
-    roughness_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    //}
+    //roughness_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    if (data.contains("emissive_texture")) {
+    //if (data.contains("emissive_texture")) {
         emissive = AssetLoader<Texture2D>::get(data.value("emissive_texture", ""));
-    }
-    emissive_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
+    //}
+    //emissive_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 }
 } // namespace our

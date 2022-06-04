@@ -9,6 +9,7 @@
 #include "mesh-renderer.hpp"
 #include "movement.hpp"
 #include "player.hpp"
+#include <iostream>
 
 namespace our {
 
