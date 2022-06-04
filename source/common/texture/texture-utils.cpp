@@ -50,7 +50,7 @@ our::Texture2D *our::texture_utils::loadImage(const std::string &filename, bool 
     // Bind the texture such that we upload the image data to its storage
     // TODO: (Req 4) Finish this function to fill the texture with the data
     // found in "pixels" and generate the mipmaps if requested
-    texture->bind();
+    texture->bind(GL_TEXTURE0);
 
     // set pixel storage modes
     //  GL_UNPACK_ALIGNMENT: Specifies the alignment requirements for the start of each pixel row in memory. The

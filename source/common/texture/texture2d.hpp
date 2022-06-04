@@ -26,9 +26,9 @@ public:
     GLuint getOpenGLName() { return name; }
 
     // This method binds this texture to GL_TEXTURE_2D
-    void bind() const {
+    void bind(GLenum num) const {
         // TODO: (Req 4) Complete this function
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(num);       
         glBindTexture(GL_TEXTURE_2D, name); // To work with our texture as a 2D texture, we bind it to GL_TEXTURE_2D.
     }
 
