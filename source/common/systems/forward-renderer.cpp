@@ -116,13 +116,32 @@ void ForwardRenderer::render(World *world) {
     // TODO: (Req 8) Clear the color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // grap all the entities having light components
+    std::vector<Entity *> lEntities = this->lightEntities(world);
+    auto executeCommands = [&VP, &camera, &lEntities, this](std::vector<RenderCommand> commands) {
+        for (RenderCommand command : commands) {
+            ShaderProgram *program = command.material->shader;
+            Mesh *mesh = command.mesh;
+            command.material->setup();
+
+            // eye, M, M_IT, VP
+            glm::vec3 eye =
+                glm::vec3(camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(glm::vec3(0, 0, 0), 1.0f));
+            glm::mat4 M = command.localToWorld;
+            glm::mat4 M_IT = glm::inverse(glm::transpose(M));
+
+            program->set("eye", eye);
+            program->set("M", M);
+            program->set("M_IT", M_IT);
+            program->set("VP", VP);
+            this->renderLights(lEntities, program);
+            mesh->draw();
+        }
+    };
+
     // TODO: (Req 8) Draw all the opaque commands
     //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-    for (auto command : opaqueCommands) {
-        command.material->setup();
-        command.material->shader->set("transform", VP * command.localToWorld);
-        command.mesh->draw();
-    }
+    executeCommands(opaqueCommands);
 
     // If there is a sky material, draw the sky
     if (this->skyMaterial) {
@@ -154,11 +173,7 @@ void ForwardRenderer::render(World *world) {
     }
     // TODO: (Req 8) Draw all the transparent commands
     //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-    for (auto command : transparentCommands) {
-        command.material->setup();
-        command.material->shader->set("transform", VP * command.localToWorld);
-        command.mesh->draw();
-    }
+    executeCommands(transparentCommands);
 
     // If there is a postprocess material, apply postprocessing
     if (postProcessMaterial) {
@@ -269,6 +284,42 @@ void ForwardRenderer::initPostProcess(const nlohmann::json &config) {
     // The default options are fine but we don't need to interact with the depth buffer
     // so it is more performant to disable the depth mask
     postProcessMaterial->pipelineState.depthMask = false;
+}
+
+std::vector<Entity *> ForwardRenderer::lightEntities(World *world) {
+    std::vector<Entity *> entities;
+    for (auto entity : world->getEntities()) {
+        auto lent = entity->getComponent<LightComponent>();
+        if (lent) {
+            entities.push_back(entity);
+        }
+    }
+    return entities;
+}
+
+void ForwardRenderer::renderLights(const std::vector<Entity *> &entities, ShaderProgram *program) {
+    int cnt = entities.size();
+    program->set("light_count", cnt);
+    for (int i = 0; i < cnt; i++) {
+        auto entity = entities[i];
+        auto lent = entity->getComponent<LightComponent>();
+        if (lent) {
+            // set the light type, diffuse, specular, position, attneuation, cone_angles
+            program->set("lights[" + std::to_string(i) + "].type", (int)lent->lightType);
+            program->set("lights[" + std::to_string(i) + "].diffuse", lent->diffuse);
+            program->set("lights[" + std::to_string(i) + "].specular", lent->specular);
+            program->set("lights[" + std::to_string(i) + "].attenuation", lent->attenuation);
+            program->set("lights[" + std::to_string(i) + "].position", entity->localTransform.position);
+            program->set("lights[" + std::to_string(i) + "].cone_angles",
+                         glm::vec2(glm::radians(lent->cone_angles.x), glm::radians(lent->cone_angles.y)));
+
+            // set the light's direction
+            glm::vec3 rotation = entity->localTransform.rotation;
+            program->set(
+                "lights[" + std::to_string(i) + "].direction",
+                (glm::vec3)((glm::yawPitchRoll(rotation[1], rotation[0], rotation[2]) * (glm::vec4(0, -1, 0, 0)))));
+        }
+    }
 }
 
 } // namespace our

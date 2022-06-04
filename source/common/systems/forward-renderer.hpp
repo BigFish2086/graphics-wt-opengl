@@ -2,6 +2,7 @@
 
 #include "../asset-loader.hpp"
 #include "../components/camera.hpp"
+#include "../components/light.hpp"
 #include "../components/mesh-renderer.hpp"
 #include "../ecs/world.hpp"
 
@@ -50,6 +51,10 @@ private:
 
     // loads the post processing material
     void initPostProcess(const nlohmann::json &config);
+
+    // entities with light material
+    std::vector<Entity *> lightEntities(World *world);
+    void renderLights(const std::vector<Entity *> &entities, ShaderProgram *program);
 
 public:
     // Initialize the renderer including the sky and the Postprocessing objects.
