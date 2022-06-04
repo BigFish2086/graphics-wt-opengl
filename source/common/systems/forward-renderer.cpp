@@ -2,114 +2,23 @@
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
 #include "glad/gl.h"
+#include "glm/gtx/euler_angles.hpp"
 
 namespace our {
 
 void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &config) {
     // First, we store the window size for later use
     this->windowSize = windowSize;
-
     // Then we check if there is a sky texture in the configuration
     if (config.contains("sky")) {
-        // First, we create a sphere which will be used to draw the sky
-        this->skySphere = mesh_utils::sphere(glm::ivec2(16, 16));
+        this->initSky(config);
+    }
 
-        // We can draw the sky using the same shader used to draw textured objects
-        ShaderProgram *skyShader = new ShaderProgram();
-        skyShader->attach("assets/shaders/textured.vert", GL_VERTEX_SHADER);
-        skyShader->attach("assets/shaders/textured.frag", GL_FRAGMENT_SHADER);
-        skyShader->link();
-
-        // TODO: (Req 9) Pick the correct pipeline state to draw the sky
-        //  Hints: the sky will be draw after the opaque objects so we would need
-        // depth testing but which depth funtion should we pick? We will draw the sphere
-        // from the inside, so what options should we pick for the face culling.
-        PipelineState skyPipelineState{};
-        skyPipelineState.depthTesting.enabled = true;
-        skyPipelineState.depthTesting.function = GL_LEQUAL;
-        skyPipelineState.faceCulling.enabled = true;
-        skyPipelineState.faceCulling.culledFace = GL_FRONT;
-        skyPipelineState.faceCulling.frontFace = GL_CCW;
-        skyPipelineState.setup();
-
-        // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while
-        // rendering the sky)
-        std::string skyTextureFile = config.value<std::string>("sky", "");
-        Texture2D *skyTexture = texture_utils::loadImage(skyTextureFile, false);
-
-        // Setup a sampler for the sky
-        Sampler *skySampler = new Sampler();
-        skySampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        skySampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        skySampler->set(GL_TEXTURE_WRAP_S, GL_REPEAT);
-        skySampler->set(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        // Combine all the aforementioned objects (except the mesh) into a material
-        this->skyMaterial = new TexturedMaterial();
-        this->skyMaterial->shader = skyShader;
-        this->skyMaterial->texture = skyTexture;
-        this->skyMaterial->sampler = skySampler;
-        this->skyMaterial->pipelineState = skyPipelineState;
-        this->skyMaterial->tint = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        this->skyMaterial->alphaThreshold = 1.0f;
-        this->skyMaterial->transparent = false;
     }
 
     // Then we check if there is a postprocessing shader in the configuration
     if (config.contains("postprocess")) {
-        // TODO: (Req 10) Create a framebuffer
-        glGenFramebuffers(1, &this->postProcessFrameBuffer);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->postProcessFrameBuffer);
-
-        // TODO: (Req 10) Create a color and a depth texture and attach them to the framebuffer
-        //  Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
-        //  The depth format can be (Depth component with 24 bits).
-        colorTarget = texture_utils::empty(GL_RGBA8, windowSize);
-        depthTarget = texture_utils::empty(GL_DEPTH_COMPONENT24, windowSize);
-
-        // parameters of glFramebufferTexture2D are: target, attachment, textarget, texture, level
-        // 1. target: Specifies the framebuffer target.
-        // target must be GL_DRAW_FRAMEBUFFER, GL_READ_FRAMEBUFFER, or GL_FRAMEBUFFER.
-        // GL_FRAMEBUFFER is equivalent to GL_DRAW_FRAMEBUFFER.
-        // 2. attachment: Specifies the attachment point of the framebuffer.
-        // 3. attachment: must be GL_COLOR_ATTACHMENTi, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT or
-        // GL_DEPTH_STENCIL_ATTACHMENT.
-        // 4. textarget: Specifies a 2D texture target, or for cube map textures, which face is to be attached.
-        // 5. texture: Specifies the texture object to attach to the framebuffer attachment point named by attachment.
-        // 6. level: Specifies the mipmap level of texture to attach.
-
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(),
-                               0);
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(),
-                               0);
-
-        // TODO: (Req 10) Unbind the framebuffer just to be safe
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-        // Create a vertex array to use for drawing the texture
-        glGenVertexArrays(1, &postProcessVertexArray);
-
-        // Create a sampler to use for sampling the scene texture in the post processing shader
-        Sampler *postprocessSampler = new Sampler();
-        postprocessSampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        postprocessSampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        postprocessSampler->set(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        postprocessSampler->set(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        // Create the post processing shader
-        ShaderProgram *postprocessShader = new ShaderProgram();
-        postprocessShader->attach("assets/shaders/fullscreen.vert", GL_VERTEX_SHADER);
-        postprocessShader->attach(config.value<std::string>("postprocess", ""), GL_FRAGMENT_SHADER);
-        postprocessShader->link();
-
-        // Create a post processing material
-        postProcessMaterial = new TexturedMaterial();
-        postProcessMaterial->shader = postprocessShader;
-        postProcessMaterial->texture = colorTarget;
-        postProcessMaterial->sampler = postprocessSampler;
-        // The default options are fine but we don't need to interact with the depth buffer
-        // so it is more performant to disable the depth mask
-        postProcessMaterial->pipelineState.depthMask = false;
+        this->initPostProcess(config);
     }
 }
 
@@ -261,6 +170,105 @@ void ForwardRenderer::render(World *world) {
         glBindVertexArray(this->postProcessVertexArray);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
+}
+
+void ForwardRenderer::initSky(const nlohmann::json &config) {
+    // First, we create a sphere which will be used to draw the sky
+    this->skySphere = mesh_utils::sphere(glm::ivec2(16, 16));
+
+    // We can draw the sky using the same shader used to draw textured objects
+    ShaderProgram *skyShader = new ShaderProgram();
+    skyShader->attach("assets/shaders/textured.vert", GL_VERTEX_SHADER);
+    skyShader->attach("assets/shaders/textured.frag", GL_FRAGMENT_SHADER);
+    skyShader->link();
+
+    // TODO: (Req 9) Pick the correct pipeline state to draw the sky
+    //  Hints: the sky will be draw after the opaque objects so we would need
+    // depth testing but which depth funtion should we pick? We will draw the sphere
+    // from the inside, so what options should we pick for the face culling.
+    PipelineState skyPipelineState{};
+    skyPipelineState.depthTesting.enabled = true;
+    skyPipelineState.depthTesting.function = GL_LEQUAL;
+    skyPipelineState.faceCulling.enabled = true;
+    skyPipelineState.faceCulling.culledFace = GL_FRONT;
+    skyPipelineState.faceCulling.frontFace = GL_CCW;
+    skyPipelineState.setup();
+
+    // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while
+    // rendering the sky)
+    std::string skyTextureFile = config.value<std::string>("sky", "");
+    Texture2D *skyTexture = texture_utils::loadImage(skyTextureFile, false);
+
+    // Setup a sampler for the sky
+    Sampler *skySampler = new Sampler();
+    skySampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    skySampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    skySampler->set(GL_TEXTURE_WRAP_S, GL_REPEAT);
+    skySampler->set(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Combine all the aforementioned objects (except the mesh) into a material
+    this->skyMaterial = new TexturedMaterial();
+    this->skyMaterial->shader = skyShader;
+    this->skyMaterial->texture = skyTexture;
+    this->skyMaterial->sampler = skySampler;
+    this->skyMaterial->pipelineState = skyPipelineState;
+    this->skyMaterial->tint = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    this->skyMaterial->alphaThreshold = 1.0f;
+    this->skyMaterial->transparent = false;
+}
+
+void ForwardRenderer::initPostProcess(const nlohmann::json &config) {
+    // TODO: (Req 10) Create a framebuffer
+    glGenFramebuffers(1, &this->postProcessFrameBuffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->postProcessFrameBuffer);
+
+    // TODO: (Req 10) Create a color and a depth texture and attach them to the framebuffer
+    //  Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
+    //  The depth format can be (Depth component with 24 bits).
+    colorTarget = texture_utils::empty(GL_RGBA8, windowSize);
+    depthTarget = texture_utils::empty(GL_DEPTH_COMPONENT24, windowSize);
+
+    // parameters of glFramebufferTexture2D are: target, attachment, textarget, texture, level
+    // 1. target: Specifies the framebuffer target.
+    // target must be GL_DRAW_FRAMEBUFFER, GL_READ_FRAMEBUFFER, or GL_FRAMEBUFFER.
+    // GL_FRAMEBUFFER is equivalent to GL_DRAW_FRAMEBUFFER.
+    // 2. attachment: Specifies the attachment point of the framebuffer.
+    // 3. attachment: must be GL_COLOR_ATTACHMENTi, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT or
+    // GL_DEPTH_STENCIL_ATTACHMENT.
+    // 4. textarget: Specifies a 2D texture target, or for cube map textures, which face is to be attached.
+    // 5. texture: Specifies the texture object to attach to the framebuffer attachment point named by attachment.
+    // 6. level: Specifies the mipmap level of texture to attach.
+
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
+
+    // TODO: (Req 10) Unbind the framebuffer just to be safe
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    // Create a vertex array to use for drawing the texture
+    glGenVertexArrays(1, &postProcessVertexArray);
+
+    // Create a sampler to use for sampling the scene texture in the post processing shader
+    Sampler *postprocessSampler = new Sampler();
+    postprocessSampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    postprocessSampler->set(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    postprocessSampler->set(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    postprocessSampler->set(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Create the post processing shader
+    ShaderProgram *postprocessShader = new ShaderProgram();
+    postprocessShader->attach("assets/shaders/fullscreen.vert", GL_VERTEX_SHADER);
+    postprocessShader->attach(config.value<std::string>("postprocess", ""), GL_FRAGMENT_SHADER);
+    postprocessShader->link();
+
+    // Create a post processing material
+    postProcessMaterial = new TexturedMaterial();
+    postProcessMaterial->shader = postprocessShader;
+    postProcessMaterial->texture = colorTarget;
+    postProcessMaterial->sampler = postprocessSampler;
+    // The default options are fine but we don't need to interact with the depth buffer
+    // so it is more performant to disable the depth mask
+    postProcessMaterial->pipelineState.depthMask = false;
 }
 
 } // namespace our

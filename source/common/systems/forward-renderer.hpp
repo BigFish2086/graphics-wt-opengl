@@ -44,6 +44,13 @@ class ForwardRenderer {
     Texture2D *colorTarget, *depthTarget;
     TexturedMaterial *postProcessMaterial;
 
+private:
+    // loads the sky sphere mesh and material
+    void initSky(const nlohmann::json &config);
+
+    // loads the post processing material
+    void initPostProcess(const nlohmann::json &config);
+
 public:
     // Initialize the renderer including the sky and the Postprocessing objects.
     // windowSize is the width & height of the window (in pixels).
