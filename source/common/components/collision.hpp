@@ -12,6 +12,7 @@ class CollisionComponent : public Component {
 public:
     std::string obstacleType = "";
     int obstacleEffect = 1;
+    bool taken = false;
 
     // The ID of this component type is "Camera"
     static std::string getID() { return "Collision"; }
