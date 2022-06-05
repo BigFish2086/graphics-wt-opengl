@@ -1,17 +1,15 @@
 #include "car.hpp"
 #include "../ecs/entity.hpp"
 #include "asset-loader.hpp"
+#include "deserialize-utils.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "deserialize-utils.hpp"
 
 namespace our {
 void CarComponent::deserialize(const nlohmann::json &data) {
     if (!data.is_object())
         return;
-    this->velocity = data.value("health", velocity);
-    this->mesh = AssetLoader<Mesh>::get(data["mesh"].get<std::string>());
-    this->material = AssetLoader<Material>::get(data["material"].get<std::string>());
+    MeshRendererComponent::deserialize(data);
 }
 
 glm::mat4 CarComponent::getViewMatrix() const {

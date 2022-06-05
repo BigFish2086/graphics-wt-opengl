@@ -2,18 +2,15 @@
 
 #include "../ecs/component.hpp"
 
-#include "../material/material.hpp"
-#include "../mesh/mesh.hpp"
+#include "mesh-renderer.hpp"
 #include <glm/mat4x4.hpp>
 
 namespace our {
 
-class CarComponent : public Component {
+class CarComponent : public MeshRendererComponent {
 public:
-    // car velocity, mesh, material
-    glm::vec3 velocity = glm::vec3(5.0f);
-    Mesh *mesh;
-    Material *material;
+    // car velocity ==> from the Movment component
+    // mesh, material ==> from the Mesh Renderer
 
     // The ID of this component type is "Camera"
     static std::string getID() { return "Car"; }
