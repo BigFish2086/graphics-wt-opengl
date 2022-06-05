@@ -68,13 +68,15 @@ public:
                 float collisionMaxX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->maxVertexX;
                 float collisionMinX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->minVertexX;
 
-                std::cout << "###############################"<<std::endl;
-                std::cout << carMaxX << ' ' << carMinX << std::endl;
-                std::cout << collisionMaxX << ' ' << collisionMinX << std::endl;
+                // std::cout << "###############################"<<std::endl;
+                // std::cout << carMaxX << ' ' << carMinX << std::endl;
+                // std::cout << collisionMaxX << ' ' << collisionMinX << std::endl;
 
                 int effect = otherCollision->obstacleEffect;
 
-                if (!(carMaxX < collisionMinX || carMinX > collisionMaxX) && glm::abs(carPosition.z - otherPosition.z)<0.1f) {
+                if (!otherCollision->taken  && !(carMaxX < collisionMinX || carMinX > collisionMaxX) && glm::abs(carPosition.z - otherPosition.z) < 0.1f)
+                {
+                    otherCollision->taken = true;
                     if (otherCollision->obstacleType == "health") {
                         player->health += effect;
                         if (player->health > 100) {
