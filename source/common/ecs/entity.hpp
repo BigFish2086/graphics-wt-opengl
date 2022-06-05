@@ -32,6 +32,8 @@ public:
     // Computes and returns the transformation from the entities local space to the world space
     glm::mat4 getLocalToWorldMatrix() const;
 
+    glm::vec3 getGlobalPosition();
+    
     // Deserializes the entity data and components from a json object
     void deserialize(const nlohmann::json &);
 

@@ -10,6 +10,8 @@
 #include <systems/free-camera-controller.hpp>
 #include <systems/movement.hpp>
 
+#include <iostream>
+
 // This state shows how to use the ECS framework and deserialization.
 class Playstate : public our::State {
 

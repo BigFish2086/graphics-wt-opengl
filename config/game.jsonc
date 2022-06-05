@@ -171,9 +171,13 @@
                         "scale": [0.1, 0.1, 1.0],
                         "components": [
                             {
-                                "type": "Mesh Renderer",
+                                "type": "Car",
                                 "mesh": "cube",
                                 "material": "metal"
+                            }
+                            ,{
+                                "type": "Player",
+                                "health" : 100
                             }
                         ]
                     }
@@ -191,6 +195,11 @@
                         "type": "Movement",
                         "linearVelocity": [0, 0.1, 0],
                         "angularVelocity": [0, 45, 0]
+                    },
+                    {
+                        "type" :"Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
                     }
                 ]
             },

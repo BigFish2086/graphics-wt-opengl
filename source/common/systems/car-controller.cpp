@@ -11,6 +11,8 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/trigonometric.hpp>
 
+#include <iostream>
+
 namespace our {
 
 class CarController {
