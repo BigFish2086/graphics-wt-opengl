@@ -29,11 +29,8 @@ public:
         PlayerComponent *player = nullptr;
         CarComponent *car = nullptr;
         for (auto entity : world->getEntities()) {
-            player = entity->getComponent<PlayerComponent>();
-            car = entity->getComponent<CarComponent>();
-            if (player && car) {
-                break;
-            }
+            if(!player) player = entity->getComponent<PlayerComponent>();
+            if(!car) car = entity->getComponent<CarComponent>();
         }
         if (!(player && car)) {
             return;
@@ -55,7 +52,7 @@ public:
             auto otherCollision = other->getComponent<CollisionComponent>();
             if (otherCollision) {
                 Entity *otherEntity = otherCollision->getOwner();
-                glm::vec3 &otherPosition = otherEntity->localTransform.position;
+                glm::vec3 &otherPosition = otherEntity->getGlobalPosition();
 
                 // check if the two entities are close enough to collide
                 float xdiff = glm::abs(carPosition.x - otherPosition.x);
@@ -66,16 +63,25 @@ public:
 
                 bool xclose = (xdiff <= 0.3f);
                 bool yclose = (ydiff <= 0.3f);
+                float carMaxX = carPosition.x + car->mesh->maxVertexX;
+                float carMinX = carPosition.x + car->mesh->minVertexX;
+                float collisionMaxX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->maxVertexX;
+                float collisionMinX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->minVertexX;
+
+                std::cout << "###############################"<<std::endl;
+                std::cout << carMaxX << ' ' << carMinX << std::endl;
+                std::cout << collisionMaxX << ' ' << collisionMinX << std::endl;
 
                 int effect = otherCollision->obstacleEffect;
-                if (xclose ) {
+
+                if (!(carMaxX < collisionMinX || carMinX > collisionMaxX) && glm::abs(carPosition.z - otherPosition.z)<0.1f) {
                     if (otherCollision->obstacleType == "health") {
                         player->health += effect;
                         if (player->health > 100) {
                             player->health = 100;
-                            //playerScale.x = 1.0f;
+                            playerScale.x = 1.0f;
                         } else {
-                            //playerScale.x += player->health * 0.1f;
+                            playerScale.x = player->health /100.0 * 1.75;
                         }
                         carPosition.z += 20;
                         carPosition.y -= 20;
@@ -87,7 +93,7 @@ public:
                             // TODO: game over
                             collision = true;
                         } else {
-                            playerScale.x -= effect * 0.1f;
+                            playerScale.x = player->health /100.0  * 1.75;
                         }
                     }
                     carPosition.z -= 20;

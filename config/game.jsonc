@@ -1,5 +1,5 @@
 {
-    "start-scene": "main",
+    "start-scene": "menu",
     "window":
     {
         "title":"Default Game Window",
@@ -54,6 +54,19 @@
                 }
             },
             "materials":{
+                "health":{
+                    "type": "tinted",
+                    "shader": "tinted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0, 1, 0, 1]
+                },
                 "metal":{
                     "type": "tinted",
                     "shader": "tinted",
@@ -175,9 +188,22 @@
                                 "mesh": "cube",
                                 "material": "metal"
                             }
-                            ,{
+                            
+                        ]
+                    },
+                    {
+                        "position": [0, 0.95, -1],
+                        "rotation": [0, 0, 0],
+                        "scale": [1.75, 0.05, 0.01],
+                        "components": [
+                            {
+                                "type": "Mesh Renderer",
+                                "mesh": "cube",
+                                "material": "health"
+                            },
+                            {
                                 "type": "Player",
-                                "health" : 100
+                                "health": 100
                             }
                         ]
                     }

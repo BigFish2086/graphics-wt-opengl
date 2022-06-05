@@ -19,7 +19,9 @@ class Mesh {
     // will be draw by glDrawElements
     GLsizei elementCount;
 
+
 public:
+    float minVertexX, maxVertexX;
     // The constructor takes two vectors:
     // - vertices which contain the vertex data.
     // - elements which contain the indices of the vertices out of which
@@ -34,6 +36,13 @@ public:
         //  since you will need it for drawing For the attribute
         //  locations, use the constants defined above:
         //  ATTRIB_LOC_POSITION, ATTRIB_LOC_COLOR, etc
+
+        minVertexX = 1000000;
+        maxVertexX = -1000000;
+        for(int i = 0 ; i < vertices.size() ; i++){
+            minVertexX = glm::min(minVertexX, vertices[i].position.x);
+            maxVertexX = glm::max(maxVertexX, vertices[i].position.x);
+        }
 
         elementCount = elements.size();
 
