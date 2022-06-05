@@ -43,7 +43,7 @@ public:
 
         glm::vec3 &playerScale = pent->localTransform.scale;
         //glm::vec3 &carPosition = cent->localTransform.position;
-        glm::vec3 &carPosition = cent->getGlobalPosition();
+        glm::vec3 carPosition = cent->getGlobalPosition();
         glm::vec3 &carRotation = cent->localTransform.rotation;
         glm::vec3 &carScale = cent->localTransform.scale;
 
@@ -52,7 +52,7 @@ public:
             auto otherCollision = other->getComponent<CollisionComponent>();
             if (otherCollision) {
                 Entity *otherEntity = otherCollision->getOwner();
-                glm::vec3 &otherPosition = otherEntity->getGlobalPosition();
+                glm::vec3 otherPosition = otherEntity->localTransform.position;
 
                 // check if the two entities are close enough to collide
                 float xdiff = glm::abs(carPosition.x - otherPosition.x);
@@ -61,20 +61,21 @@ public:
                 // std::cout << "###############################"<<std::endl;
                 // std::cout<<xdiff<<' ' <<ydiff<<std::endl;
 
-                bool xclose = (xdiff <= 0.3f);
+                bool xclose = (xdiff <= 2.0f);
                 bool yclose = (ydiff <= 0.3f);
                 float carMaxX = carPosition.x + car->mesh->maxVertexX;
                 float carMinX = carPosition.x + car->mesh->minVertexX;
                 float collisionMaxX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->maxVertexX;
                 float collisionMinX = otherPosition.x + other->getComponent<MeshRendererComponent>()->mesh->minVertexX;
 
-                // std::cout << "###############################"<<std::endl;
-                // std::cout << carMaxX << ' ' << carMinX << std::endl;
+                std::cout << "###############################"<<std::endl;
+                std::cout << carPosition.x << ' ' << otherPosition.x << std::endl;
                 // std::cout << collisionMaxX << ' ' << collisionMinX << std::endl;
+                // std::cout << carPosition.z << ' ' << otherPosition.z << std::endl;
 
                 int effect = otherCollision->obstacleEffect;
 
-                if (!otherCollision->taken  && !(carMaxX < collisionMinX || carMinX > collisionMaxX) && glm::abs(carPosition.z - otherPosition.z) < 0.1f)
+                if (!otherCollision->taken && xclose && glm::abs(carPosition.z - otherPosition.z) < 0.1f)
                 {
                     otherCollision->taken = true;
                     if (otherCollision->obstacleType == "health") {
@@ -98,10 +99,7 @@ public:
                             playerScale.x = player->health /100.0  * 1.75;
                         }
                     }
-                    carPosition.z -= 20;
-                    carPosition.y -= 20;
                 }
-                break;
             }
         }
     }

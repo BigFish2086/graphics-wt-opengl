@@ -67,7 +67,7 @@ public:
     Texture2D *roughness;
     //Sampler *roughness_sampler;
 
-    Texture2D *emissive;
+    Texture2D *emissive = nullptr;
     //Sampler *emissive_sampler;
 
     void setup() const override;

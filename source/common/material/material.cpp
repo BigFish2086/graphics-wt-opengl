@@ -126,9 +126,9 @@ void LitMaterial::deserialize(const nlohmann::json &data) {
     //}
     //roughness_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 
-    //if (data.contains("emissive_texture")) {
+    if (data.contains("emissive_texture")) {
         emissive = AssetLoader<Texture2D>::get(data.value("emissive_texture", ""));
-    //}
+    }
     //emissive_sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
 }
 } // namespace our
