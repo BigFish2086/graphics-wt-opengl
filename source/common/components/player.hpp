@@ -10,6 +10,9 @@ class PlayerComponent: public Component {
 public:
     float health = 100.0f;
 
+    // 0 = 
+    int state = 4;
+
     // The ID of this component type is "Camera"
     static std::string getID() { return "Player"; }
 

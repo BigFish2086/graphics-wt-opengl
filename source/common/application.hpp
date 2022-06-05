@@ -72,6 +72,9 @@ namespace our {
 
     public:
 
+        // 
+        int state = 5;
+
         // Create an application with following configuration
         Application(const nlohmann::json& app_config) : app_config(app_config) {}
         // On destruction, delete all the states
