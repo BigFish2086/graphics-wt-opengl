@@ -66,7 +66,8 @@ public:
                         } else {
                             playerScale.x += player->health * 0.1f;
                         }
-                        carPosition.z += 10;
+                        carPosition.z += 20;
+                        carPosition.y -= 20;
                     } else if (otherCollision->obstacleType == "barrier") {
                         player->health -= effect;
                         if (player->health <= 0) {

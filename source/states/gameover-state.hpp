@@ -1,25 +1,55 @@
 #pragma once
 
+#include "../common/components/player.hpp"
+#include "imgui.h"
+#include "play-state.hpp"
 #include <application.hpp>
-
 #include <asset-loader.hpp>
+#include <cstring>
 #include <ecs/world.hpp>
-#include <systems/car-controller.cpp>
-#include <systems/collision-controller.cpp>
+#include <string>
 #include <systems/forward-renderer.hpp>
 #include <systems/free-camera-controller.hpp>
 #include <systems/movement.hpp>
 
 // This state shows how to use the ECS framework and deserialization.
-class Playstate : public our::State {
+class GameOverState : public our::State {
 
     our::World world;
     our::ForwardRenderer renderer;
     our::FreeCameraControllerSystem cameraController;
     our::MovementSystem movementSystem;
+    our::PlayerComponent *player;
 
-    our::CarController carSystem;
-    our::CollisionController collisionSystem;
+    void onImmediateGui() override {
+        int state = getApp()->state;
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ImGui::Begin("gameover State");
+
+        ImGui::SetWindowFontScale(2.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
+
+        if (state == 0)
+            ImGui::Text("Game Over");
+        else if (state == 1) {
+            ImGui::Text("Game Over");
+            ImGui::Text("you failed to collect at least half the coins");
+        } else if (state == 2) {
+            ImGui::Text("wow, you collect all the coins");
+        }
+
+        ImGui::PopStyleColor();
+
+        ImGui::Text(" ");
+        ImGui::Text("Do you want to exit the game ?");
+        ImGui::Text(" ");
+        if (ImGui::Button("Yes") || getApp()->getKeyboard().isPressed(GLFW_KEY_ENTER)) {
+            exit(1);
+        }
+        ImGui::End();
+    }
 
     void onInitialize() override {
         // First of all, we get the scene configuration from the app config
@@ -29,37 +59,12 @@ class Playstate : public our::State {
             our::deserializeAllAssets(config["assets"]);
         }
         // If we have a world in the scene config, we use it to populate our world
-        if (config.contains("world")) {
-            world.deserialize(config["world"]);
+        if (config.contains("menu")) {
+            world.deserialize(config["menu"]);
         }
-        // We initialize the camera controller system since it needs a pointer to the app
-        cameraController.enter(getApp());
-
-        // initialize the car system and the collision system
-        carSystem.enter(getApp());
-        collisionSystem.enter(getApp());
-
-        // Then we initialize the renderer
-        auto size = getApp()->getFrameBufferSize();
-        renderer.initialize(size, config["renderer"]);
     }
 
     void onDraw(double deltaTime) override {
-        // Here, we just run a bunch of systems to control the world logic
-        movementSystem.update(&world, (float)deltaTime);
-        cameraController.update(&world, (float)deltaTime);
-
-        // draw the car system
-        carSystem.update(&world, (float)deltaTime);
-
-        // check the collision system
-        bool collision = false;   // collision happened and health <= 0
-        collisionSystem.update(&world, collision);
-        if (collision) {
-            getApp()->state = 0;
-            this->getApp()->changeState("gameOver");
-        }
-
         // And finally we use the renderer system to draw the scene
         renderer.render(&world);
     }
@@ -68,7 +73,6 @@ class Playstate : public our::State {
         // Don't forget to destroy the renderer
         renderer.destroy();
         // On exit, we call exit for the camera controller system to make sure that the mouse is unlocked
-        cameraController.exit();
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
     }
