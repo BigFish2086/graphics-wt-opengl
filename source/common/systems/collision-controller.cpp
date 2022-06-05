@@ -43,7 +43,7 @@ public:
 
         glm::vec3 &playerScale = pent->localTransform.scale;
         //glm::vec3 &carPosition = cent->localTransform.position;
-        glm::vec3 &carPosition = cent->getGlobalPosition();
+        glm::vec3 carPosition = cent->getGlobalPosition();
         glm::vec3 &carRotation = cent->localTransform.rotation;
         glm::vec3 &carScale = cent->localTransform.scale;
 
@@ -52,7 +52,7 @@ public:
             auto otherCollision = other->getComponent<CollisionComponent>();
             if (otherCollision) {
                 Entity *otherEntity = otherCollision->getOwner();
-                glm::vec3 &otherPosition = otherEntity->getGlobalPosition();
+                glm::vec3 otherPosition = otherEntity->getGlobalPosition();
 
                 // check if the two entities are close enough to collide
                 float xdiff = glm::abs(carPosition.x - otherPosition.x);
