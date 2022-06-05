@@ -61,7 +61,7 @@ public:
                 // std::cout << "###############################"<<std::endl;
                 // std::cout<<xdiff<<' ' <<ydiff<<std::endl;
 
-                bool xclose = (xdiff <= 2.0f);
+                bool xclose = (xdiff <= 1.5f);
                 bool yclose = (ydiff <= 0.3f);
                 float carMaxX = carPosition.x + car->mesh->maxVertexX;
                 float carMinX = carPosition.x + car->mesh->minVertexX;
@@ -75,7 +75,7 @@ public:
 
                 int effect = otherCollision->obstacleEffect;
 
-                if (!otherCollision->taken && xclose && glm::abs(carPosition.z - otherPosition.z) < 0.1f)
+                if (!otherCollision->taken && xclose && glm::abs(carPosition.z - otherPosition.z) < 0.5f)
                 {
                     otherCollision->taken = true;
                     if (otherCollision->obstacleType == "health") {

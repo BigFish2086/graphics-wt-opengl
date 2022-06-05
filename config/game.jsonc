@@ -13,9 +13,9 @@
         "renderer":{
             "sky": "assets/textures/sky.jpg",
             "postprocess": "assets/shaders/postprocess/vignette.frag",
-            "sky_top": [1,1,1],
-            "sky_middle": [0,0,0],
-            "sky_bottom": [1,1,1]
+            "sky_top": [0.7,0.7,0.7],
+            "sky_middle": [0.3,0.3,0.3],
+            "sky_bottom": [0,0,0]
         },
         "assets":{
             "shaders":{
@@ -127,7 +127,7 @@
                     // "tint": [1, 1, 1, 1],
                     "albedo_texture": "road_texture",
                     "ambientOcclusion_texture": "road_texture",
-                    "emissive_texture" : "road_texture",
+                    "emissive_texture" : "None",
                     "sampler": "default"
                 },
                 "barrier_material": {
@@ -144,7 +144,7 @@
                     // "tint": [1, 1, 1, 1],
                     "albedo_texture": "barrier",
                     "ambientOcclusion_texture": "barrier_bump",
-                    "emissive_texture": "barrier_spec",
+                    "emissive_texture": "None",
                     "sampler": "default"
                 },
                 "heart_material": {
@@ -161,7 +161,7 @@
                     // "tint": [1, 1, 1, 1],
                     "albedo_texture": "heart_texture",
                     "ambientOcclusion_texture": "heart_texture",
-                    "emissive_texture": "heart_texture",
+                    "emissive_texture": "None",
                     "sampler": "default"
                 },
                 "small_car": {
@@ -177,7 +177,7 @@
                     },
                     "sampler": "default",
                     "albedo_texture": "DeLorean",
-                    "emissive_texture": "DeLorean",
+                    "emissive_texture": "None",
                     "ambientOcclusion_texture": "DeLorean"
                 },
                 "monkey":{
@@ -217,17 +217,62 @@
         },
         "world":[
             {
-                "position" : [0,-2,0],
+                "position" : [-2,0,0],
                 "components": [
-                    // {
-                    //     "type" :"Light",
-                    //     "lightType" : "directional",
-                    //     "diffuse": [1,0.9,0.7],
-                    //     "specular":[1, 0.9, 0.7],
-                    //     "attenuation":[ 1, 0, 0],
-                    //     "cone_angles": [10, 11],
-                    //     "direction" :[0, 1, 0]
-                    // }
+                    {
+                        "type" :"Light",
+                        "lightType" : "directional",
+                        "diffuse": [1,0.9,0.7],
+                        "specular":[1, 0.9, 0.7],
+                        "attenuation":[ 1, 0, 0],
+                        "cone_angles": [10, 11],
+                        "direction" :[1, 0, 0]
+                    }
+                ]
+
+            },
+            {
+                "position" : [2,0,0],
+                "components": [
+                    {
+                        "type" :"Light",
+                        "lightType" : "directional",
+                        "diffuse": [0.7,0.9,1],
+                        "specular":[1, 0.9, 0.7],
+                        "attenuation":[ 1, 0, 0],
+                        "cone_angles": [10, 11],
+                        "direction" :[-1, 0, 0]
+                    }
+                ]
+
+            },
+            {
+                "position" : [-2,0,0],
+                "components": [
+                    {
+                        "type" :"Light",
+                        "lightType" : "directional",
+                        "diffuse": [1,0,0],
+                        "specular":[1, 0.9, 0.7],
+                        "attenuation":[ 1, 0, 0],
+                        "cone_angles": [10, 11],
+                        "direction" :[1, 0, 0]
+                    }
+                ]
+
+            },
+            {
+                "position" : [2,0,0],
+                "components": [
+                    {
+                        "type" :"Light",
+                        "lightType" : "directional",
+                        "diffuse": [0,0,1],
+                        "specular":[1, 0.9, 0.7],
+                        "attenuation":[ 1, 0, 0],
+                        "cone_angles": [10, 11],
+                        "direction" :[-1, 0, 0]
+                    }
                 ]
 
             },
@@ -242,6 +287,20 @@
                     }
                 ],
                 "children": [
+                    // {
+                    //     "position": [1, -1, 0],
+                    //     "components": [
+                    //         {
+                    //             "type" :"Light",
+                    //             "lightType" : "point",
+                    //             "diffuse": [1,0.9,0.7],
+                    //             "specular":[1, 0.9, 0.7],
+                    //             "attenuation":[ 0.1, 0.1, 0.1],
+                    //             "cone_angles": [30, 50],
+                    //             "direction" :[0, 0, -1]
+                    //         }
+                    //     ]
+                    // },
                     {
                         "position": [1, -1, -2],
                         "rotation": [0, -180, 0],
@@ -270,6 +329,78 @@
                                 "health": 100
                             }
                         ]
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    0
+                ],
+                "rotation": [
+                    -90,
+                    0,
+                    0
+                ],
+                "scale": [
+                    10,
+                    100,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "road"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -100
+                ],
+                "rotation": [
+                    -90,
+                    0,
+                    0
+                ],
+                "scale": [
+                    10,
+                    100,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "road"
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -200
+                ],
+                "rotation": [
+                    -90,
+                    0,
+                    0
+                ],
+                "scale": [
+                    10,
+                    100,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "road"
                     }
                 ]
             },
@@ -376,17 +507,1746 @@
                 ]
             },
             {
-                "position": [0, -1, 0],
-                "rotation": [-90, 0, 0],
-                "scale": [10, 100, 1],
+                "position": [
+                    -5,
+                    -1,
+                    -40
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
                 "components": [
                     {
                         "type": "Mesh Renderer",
-                        "mesh": "plane",
-                        "material": "road"
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -40
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -40
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -60
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -60
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -60
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -80
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -80
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -80
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -100
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -100
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -100
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -120
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -120
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -120
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -140
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -140
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -140
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -160
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -160
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -160
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -180
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -180
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -180
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -200
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -200
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -200
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -220
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -220
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -220
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -240
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -240
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -240
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -260
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -260
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -260
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -280
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -280
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -280
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -300
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -300
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -300
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -320
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -320
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -320
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -340
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -340
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -340
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -360
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -360
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -360
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -380
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -380
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -380
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -400
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -400
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -400
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    -5,
+                    -1,
+                    -420
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    0,
+                    -1,
+                    -420
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "barrier",
+                        "material": "barrier_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "barrier",
+                        "obstacleSize": 10
+                    }
+                ]
+            },
+            {
+                "position": [
+                    5,
+                    -1,
+                    -420
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "heart",
+                        "material": "heart_material"
+                    },
+                    {
+                        "type": "Collision",
+                        "obstacleType": "health",
+                        "obstacleSize": 10
                     }
                 ]
             }
+            
         ]
     }
 }
