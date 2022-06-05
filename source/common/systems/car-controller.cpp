@@ -18,6 +18,10 @@ class CarController {
     bool mouse_locked = false;
 
 public:
+    bool jumped = false;
+    double seconds = 1;
+    double jumpTime = 0.5;
+
     void enter(Application *app) { this->app = app; }
 
     void update(World *world, float deltaTime) {
@@ -68,41 +72,36 @@ public:
         }
 
         rotation.y = glm::wrapAngle(rotation.y);
-
         glm::mat4 matrix = entity->localTransform.toMat4();
-
+        glm::vec3 current_sensitivity = controller->positionSensitivity;
         glm::vec3 front = glm::vec3(matrix * glm::vec4(0, 0, -1, 0)), up = glm::vec3(matrix * glm::vec4(0, 1, 0, 0)),
                   right = glm::vec3(matrix * glm::vec4(1, 0, 0, 0));
-
-        glm::vec3 current_sensitivity = controller->positionSensitivity;
 
         // shift == speeding up
         if (app->getKeyboard().isPressed(GLFW_KEY_LEFT_SHIFT)) {
             current_sensitivity *= controller->speedupFactor;
         }
-
-        // w, s == forward, backward
+        // w = jump
         if (app->getKeyboard().isPressed(GLFW_KEY_W)) {
-            position += front * (deltaTime * current_sensitivity.z);
+            jumped = true;
+            seconds = 1;
+            position.y = 1.5;
         }
-        if (app->getKeyboard().isPressed(GLFW_KEY_S)) {
-            position -= front * (deltaTime * current_sensitivity.z);
-        }
-
-        // q, e == up and down
-        if (app->getKeyboard().isPressed(GLFW_KEY_Q)) {
-            position += up * (deltaTime * current_sensitivity.y);
-        }
-        // if (app->getKeyboard().isPressed(GLFW_KEY_E)) {
-        //     position -= up * (deltaTime * current_sensitivity.y);
-        // }
-
         // a, d == left and right
-        if (app->getKeyboard().isPressed(GLFW_KEY_D)) {
+        if (app->getKeyboard().isPressed(GLFW_KEY_D) && position.x > -10.0f) {
             position += right * (deltaTime * current_sensitivity.x);
         }
-        if (app->getKeyboard().isPressed(GLFW_KEY_A)) {
+        if (app->getKeyboard().isPressed(GLFW_KEY_A) && position.x < 10.f) {
             position -= right * (deltaTime * current_sensitivity.x);
+        }
+        if (jumped) {
+            seconds -= deltaTime;
+            if (seconds <= 0)
+                jumped = false;
+            if (jumpTime <= seconds)
+                position.y += 0.1;
+            else
+                position.y -= 0.1;
         }
     }
 
