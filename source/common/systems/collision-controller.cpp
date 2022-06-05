@@ -13,6 +13,8 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/trigonometric.hpp>
 
+#include <iostream>
+
 namespace our {
 
 class CollisionController {
@@ -39,9 +41,12 @@ public:
         Entity *pent = player->getOwner();
         Entity *cent = car->getOwner();
 
-        glm::vec3 &playerScale = pent->localTransform.scale;
+        std::cout<<"+++++++++++++++++++++++\n";
+        std::cout<<player->health<<std::endl;
 
-        glm::vec3 &carPosition = cent->localTransform.position;
+        glm::vec3 &playerScale = pent->localTransform.scale;
+        //glm::vec3 &carPosition = cent->localTransform.position;
+        glm::vec3 &carPosition = cent->getGlobalPosition();
         glm::vec3 &carRotation = cent->localTransform.rotation;
         glm::vec3 &carScale = cent->localTransform.scale;
 
@@ -53,18 +58,24 @@ public:
                 glm::vec3 &otherPosition = otherEntity->localTransform.position;
 
                 // check if the two entities are close enough to collide
-                bool xclose = glm::abs(carPosition.x - otherPosition.x) <= 5.0f;
-                bool yclose = glm::abs(carPosition.y - otherPosition.y) <= 3.0f;
+                float xdiff = glm::abs(carPosition.x - otherPosition.x);
+                float ydiff = glm::abs(carPosition.y - otherPosition.y);
+
+                // std::cout << "###############################"<<std::endl;
+                // std::cout<<xdiff<<' ' <<ydiff<<std::endl;
+
+                bool xclose = (xdiff <= 0.3f);
+                bool yclose = (ydiff <= 0.3f);
 
                 int effect = otherCollision->obstacleEffect;
-                if (xclose && yclose) {
+                if (xclose ) {
                     if (otherCollision->obstacleType == "health") {
                         player->health += effect;
                         if (player->health > 100) {
                             player->health = 100;
-                            playerScale.x = 1.0f;
+                            //playerScale.x = 1.0f;
                         } else {
-                            playerScale.x += player->health * 0.1f;
+                            //playerScale.x += player->health * 0.1f;
                         }
                         carPosition.z += 10;
                     } else if (otherCollision->obstacleType == "barrier") {

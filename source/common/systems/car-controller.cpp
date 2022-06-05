@@ -11,6 +11,8 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/trigonometric.hpp>
 
+#include <iostream>
+
 namespace our {
 
 class CarController {
@@ -104,6 +106,9 @@ public:
         if (app->getKeyboard().isPressed(GLFW_KEY_A)) {
             position -= right * (deltaTime * current_sensitivity.x);
         }
+
+        std::cout<<"Momvement-------------\n";
+        std::cout<<position.x<<' '<<position.y<<' '<<position.z<<std::endl;
     }
 
     void exit() {

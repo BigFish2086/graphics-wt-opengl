@@ -21,6 +21,10 @@ glm::mat4 Entity::getLocalToWorldMatrix() const {
     return localToWorld;
 }
 
+glm::vec3 Entity::getGlobalPosition() {
+    return (glm::vec3)(getLocalToWorldMatrix() * glm::vec4(localTransform.position,1));
+}
+
 // Deserializes the entity data and components from a json object
 void Entity::deserialize(const nlohmann::json &data) {
     if (!data.is_object())

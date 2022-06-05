@@ -10,6 +10,8 @@
 #include <systems/car-controller.cpp>
 #include <systems/collision-controller.cpp>
 
+#include <iostream>
+
 // This state shows how to use the ECS framework and deserialization.
 class Playstate: public our::State {
 
