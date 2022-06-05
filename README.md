@@ -17,6 +17,7 @@ https://user-images.githubusercontent.com/62252633/172072965-a627f390-760a-4237-
 git clone https://github.com/BigFish2086/graphics-wt-opengl/tree/phase-3
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B ./build
 cd ./build; make
+./bin/GAME_APPLICATION -c='config/game.jsonc
 ```
 
 
