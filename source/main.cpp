@@ -6,6 +6,7 @@
 #include <application.hpp>
 
 #include "states/play-state.hpp"
+#include "states/menu-state.hpp"
 #include "states/mesh-test-state.hpp"
 #include "states/transform-test-state.hpp"
 #include "states/pipeline-test-state.hpp"
@@ -49,6 +50,7 @@ int main(int argc, char** argv) {
     app.registerState<MaterialTestState>("material-test");
     app.registerState<EntityTestState>("entity-test");
     app.registerState<RendererTestState>("renderer-test");
+    app.registerState<MenuState>("menu");
     // Then choose the state to run based on the option "start-scene" in the config
     if(app_config.contains(std::string{"start-scene"})){
         app.changeState(app_config["start-scene"].get<std::string>());
